@@ -17,7 +17,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           title: 'Vendor',
           icon: 'pi pi-user',
-          permissions: ['dashboard menu']
+          permissions: ['management menu']
         },
         component: () => import('@src/views/vendor/index.vue')
       },
@@ -30,6 +30,46 @@ const routes: RouteRecordRaw[] = [
           hidden: true
         },
         component: () => import('@src/components/vendor/EditVendor.vue')
+      },
+      {
+        path: '/customer',
+        name: 'customer',
+        meta: {
+          title: 'Customer',
+          icon: 'pi pi-users',
+          permissions: ['customer menu']
+        },
+        component: () => import('@src/views/customer/index.vue')
+      },
+      {
+        path: '/purchase',
+        name: 'purchase',
+        meta: {
+          title: 'Purchase',
+          icon: 'pi pi-shopping-cart',
+          permissions: ['purchase menu']
+        },
+        component: () => import('@src/views/purchase/index.vue')
+      },
+      {
+        path: '/inventories',
+        name: 'inventories',
+        meta: {
+          title: 'Inventory',
+          icon: 'pi pi-shopping-bag',
+          permissions: ['inventory menu']
+        },
+        component: () => import('@src/views/inventory/index.vue')
+      },
+      {
+        path: '/inventory-categories',
+        name: 'inventory_categories',
+        meta: {
+          title: 'Inventory Categories',
+          icon: 'pi pi-briefcase',
+          permissions: ['inventoryCategory menu']
+        },
+        component: () => import('@src/views/inventory_category/index.vue')
       }
     ]
   }
