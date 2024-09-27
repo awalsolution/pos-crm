@@ -13,7 +13,6 @@
 <script lang="ts" setup>
 import Button from 'primevue/button';
 import { useRouter } from 'vue-router';
-import Button from 'primevue/button';
 const router = useRouter();
 
 function goHome() {
