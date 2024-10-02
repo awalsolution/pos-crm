@@ -142,7 +142,7 @@ const dialogHeader: Ref = ref();
 const deleteId: Ref = ref();
 
 const { getList, list, page, pageSizes, itemCount, perPage, searchParams }: any =
-  usePagination('/inventory-category');
+  usePagination('/inventory-categories');
 
 const filters = ref({
   name: { value: null, matchMode: FilterMatchMode.CONTAINS }
@@ -193,12 +193,12 @@ const saveForm = () => {
   submitted.value = true;
   if (data?.value.name?.trim()) {
     if (data?.value.id) {
-      updateRecordApi(`/inventory-category/${data.value.id}`, data.value).then((res: any) => {
+      updateRecordApi(`/inventory-categories/${data.value.id}`, data.value).then((res: any) => {
         window.toast('success', 'Success Message', res.message);
         getList();
       });
     } else {
-      createRecordApi('/inventory-category', data.value).then((res: any) => {
+      createRecordApi('/inventory-categories', data.value).then((res: any) => {
         window.toast('success', 'Success Message', res.message);
         getList();
       });
@@ -209,7 +209,7 @@ const saveForm = () => {
 };
 
 function handleDelete() {
-  deleteRecordApi(`/inventory-category/${deleteId.value}`)
+  deleteRecordApi(`/inventory-categories/${deleteId.value}`)
     .then((res: any) => {
       window.toast('success', 'Success Message', res.message);
       getList();

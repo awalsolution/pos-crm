@@ -382,7 +382,7 @@ function openAddDialog() {
 function openEditDialog(item: any) {
   dialogHeader.value = 'Edit Customer';
   data.value = item;
-  item.address.map((item: any) => {
+  item?.address?.map((item: any) => {
     console.log(item);
     if (item.type === 'billing') {
       data.value.billing = item;
