@@ -7,7 +7,7 @@ const routes: RouteRecordRaw[] = [
     component: DashboardLayout,
     meta: {
       title: 'Management',
-      permissions: ['dashboard menu'],
+      permissions: ['management menu'],
       sort: 1
     },
     children: [
@@ -17,7 +17,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           title: 'Vendor',
           icon: 'pi pi-user',
-          permissions: ['management menu']
+          permissions: ['vendor menu']
         },
         component: () => import('@src/views/vendor/index.vue')
       },
@@ -26,7 +26,7 @@ const routes: RouteRecordRaw[] = [
         name: 'vendor_edit',
         meta: {
           title: 'Edit Vendor',
-          permissions: ['user update'],
+          permissions: ['vendor update'],
           hidden: true
         },
         component: () => import('@src/components/vendor/EditVendor.vue')
@@ -41,6 +41,16 @@ const routes: RouteRecordRaw[] = [
         },
         component: () => import('@src/views/customer/index.vue')
       },
+      // {
+      //   path: '/customer/:customer_id/edit',
+      //   name: 'customer_edit',
+      //   meta: {
+      //     title: 'Edit Customer',
+      //     permissions: ['customer update'],
+      //     hidden: true
+      //   },
+      //   component: () => import('@src/components/customer/EditCustomer.vue')
+      // },
       {
         path: '/purchase',
         name: 'purchase',

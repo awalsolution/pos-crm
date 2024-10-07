@@ -405,15 +405,15 @@ const data: Ref = ref({
   defaul_po_days: 7,
   min_order: 0.0,
   pd_fright_amount: 0.0,
-  sameAsShipping: false,
-  shippingAddress: {
+  same_as_shipping: false,
+  shipping_address: {
     street: '',
     city: '',
     state: '',
     zip: '',
     country: ''
   },
-  mailingAddress: {
+  mailing_address: {
     street: '',
     city: '',
     state: '',
