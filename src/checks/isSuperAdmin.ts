@@ -10,7 +10,7 @@ export const isSuperAdminUser = () => {
       return false;
     }
   } else {
-    window['$message'].error('Current does not exist');
+    window.toast('error', 'Error Message', 'User Store has not current user data!');
   }
 };
 
@@ -22,7 +22,7 @@ export const isSuperAdmin = () => {
 
     return isSuperAdmin;
   } else {
-    window['$message'].error('User Store has not current user data!');
+    window.toast('error', 'Error Message', 'User Store has not current user data!');
     return false;
   }
 };
@@ -37,7 +37,7 @@ export const isVendor = () => {
 
     return isSuperAdmin;
   } else {
-    window['$message'].error('User Store has not current user data!');
+    window.toast('error', 'Error Message', 'User Store has not current user data!');
     return false;
   }
 };
