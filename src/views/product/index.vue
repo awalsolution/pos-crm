@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="flex items-center justify-between mb-5">
-      <h1 class="text-2xl font-bold">Inventory List</h1>
+      <h1 class="text-2xl font-bold">Products List</h1>
       <Button
         @click="openAddDialog"
         severity="primary"
-        label="Add inventory"
+        label="Add Product"
         icon="pi pi-plus"
-        v-permission="{ action: ['custromer create'] }"
+        v-permission="{ action: ['product create'] }"
       />
     </div>
     <DataTable
@@ -20,7 +20,7 @@
       :rows="20"
       :rowsPerPageOptions="pageSizes"
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-      :currentPageReportTemplate="`Showing ${page} to ${perPage} of ${itemCount} Inventories`"
+      :currentPageReportTemplate="`Showing ${page} to ${perPage} of ${itemCount} Products`"
     >
       <template #empty> No Inventories found. </template>
       <Column field="name" header="Name" :show-filter-menu="false" :showClearButton="false">
@@ -54,7 +54,7 @@
           {{ data.created_at }}
         </template>
       </Column>
-      <Column header="Actions" v-permission="{ action: ['inventory update', 'inventory delete'] }">
+      <Column header="Actions" v-if="hasPermission(['product update', 'product delete'])">
         <template #body="{ data }">
           <Button
             label="Edit"
@@ -63,7 +63,7 @@
             rounded
             class="mr-2"
             @click="openEditDialog(data)"
-            v-permission="{ action: ['inventory update'] }"
+            v-permission="{ action: ['product update'] }"
           />
           <Button
             label="Delete"
@@ -72,7 +72,7 @@
             rounded
             severity="danger"
             @click="openDeleteDialog(data)"
-            v-permission="{ action: ['inventory delete'] }"
+            v-permission="{ action: ['product delete'] }"
           />
         </template>
       </Column>
@@ -129,6 +129,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { createRecordApi, deleteRecordApi, updateRecordApi } from '@src/api/endpoints';
 import { usePagination } from '@src/hooks/pagination/usePagination';
+import { usePermission } from '@src/hooks/permission/usePermission';
 import { debounce } from 'lodash-es';
 
 const data: Ref = ref({});
@@ -137,9 +138,10 @@ const addDialog: Ref = ref(false);
 const deleteDialog: Ref = ref(false);
 const dialogHeader: Ref = ref();
 const deleteId: Ref = ref();
+const { hasPermission } = usePermission();
 
 const { getList, list, page, pageSizes, itemCount, perPage, searchParams }: any =
-  usePagination('/inventories');
+  usePagination('/products');
 
 const filters = ref({
   name: { value: null, matchMode: FilterMatchMode.CONTAINS }
@@ -162,14 +164,14 @@ onMounted(() => {
 });
 
 function openAddDialog() {
-  dialogHeader.value = 'Add Inventory';
+  dialogHeader.value = 'Add Aroduct';
   data.value = {};
   submitted.value = false;
   addDialog.value = true;
 }
 
 function openEditDialog(item: any) {
-  dialogHeader.value = 'Edit Inventory';
+  dialogHeader.value = 'Edit Product';
   data.value = item;
   submitted.value = false;
   addDialog.value = true;
@@ -190,12 +192,12 @@ const saveForm = () => {
   submitted.value = true;
   if (data?.value.name?.trim()) {
     if (data?.value.id) {
-      updateRecordApi(`/inventories/${data.value.id}`, data.value).then((res: any) => {
+      updateRecordApi(`/products/${data.value.id}`, data.value).then((res: any) => {
         window.toast('success', 'Success Message', res.message);
         getList();
       });
     } else {
-      createRecordApi('/inventories', data.value).then((res: any) => {
+      createRecordApi('/products', data.value).then((res: any) => {
         window.toast('success', 'Success Message', res.message);
         getList();
       });
@@ -206,7 +208,7 @@ const saveForm = () => {
 };
 
 function handleDelete() {
-  deleteRecordApi(`/inventories/${deleteId.value}`)
+  deleteRecordApi(`/products/${deleteId.value}`)
     .then((res: any) => {
       window.toast('success', 'Success Message', res.message);
       getList();

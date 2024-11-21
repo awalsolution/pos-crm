@@ -74,10 +74,7 @@
           {{ data.created_at }}
         </template>
       </Column>
-      <Column
-        header="Actions"
-        v-permission="{ action: ['permission update', 'permission delete'] }"
-      >
+      <Column header="Actions" v-if="hasPermission(['permission update', 'permission delete'])">
         <template #body="{ data }">
           <Button
             label="Edit"
@@ -160,6 +157,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { createRecordApi, deleteRecordApi, updateRecordApi } from '@src/api/endpoints';
 import { usePagination } from '@src/hooks/pagination/usePagination';
+import { usePermission } from '@src/hooks/permission/usePermission';
 import { debounce } from 'lodash-es';
 
 const data: Ref = ref({});
@@ -168,6 +166,7 @@ const addDialog: Ref = ref(false);
 const delDialog: Ref = ref(false);
 const dialogHeader: Ref = ref();
 const delId: Ref = ref();
+const { hasPermission } = usePermission();
 
 const { getList, list, page, pageSizes, itemCount, perPage, searchParams }: any =
   usePagination('/permissions');

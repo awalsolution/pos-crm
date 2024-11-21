@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="flex items-center justify-between mb-5">
-      <h1 class="text-2xl font-bold">Inventory Category List</h1>
+      <h1 class="text-2xl font-bold">Products Category List</h1>
       <Button
         @click="openAddDialog"
         severity="primary"
-        label="Add Inventory Category"
+        label="Add products category"
         icon="pi pi-plus"
-        v-permission="{ action: ['inventoryCategory create'] }"
+        v-permission="{ action: ['product category create'] }"
       />
     </div>
     <DataTable
@@ -20,7 +20,7 @@
       :rows="20"
       :rowsPerPageOptions="pageSizes"
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-      :currentPageReportTemplate="`Showing ${page} to ${perPage} of ${itemCount} Inventory Category`"
+      :currentPageReportTemplate="`Showing ${page} to ${perPage} of ${itemCount} Products Categories`"
     >
       <template #empty> No Inventory Category found. </template>
       <Column field="name" header="Name" :show-filter-menu="false" :showClearButton="false">
@@ -56,7 +56,7 @@
       </Column>
       <Column
         header="Actions"
-        v-permission="{ action: ['inventoryCategory update', 'inventoryCategory delete'] }"
+        v-permission="{ action: ['product category update', 'product category delete'] }"
       >
         <template #body="{ data }">
           <Button
@@ -66,7 +66,7 @@
             rounded
             class="mr-2"
             @click="openEditDialog(data)"
-            v-permission="{ action: ['inventoryCategory update'] }"
+            v-permission="{ action: ['product category update'] }"
           />
           <Button
             label="Delete"
@@ -75,7 +75,7 @@
             rounded
             severity="danger"
             @click="openDeleteDialog(data)"
-            v-permission="{ action: ['inventoryCategory delete'] }"
+            v-permission="{ action: ['product category delete'] }"
           />
         </template>
       </Column>
@@ -142,7 +142,7 @@ const dialogHeader: Ref = ref();
 const deleteId: Ref = ref();
 
 const { getList, list, page, pageSizes, itemCount, perPage, searchParams }: any =
-  usePagination('/inventory-categories');
+  usePagination('/product-categories');
 
 const filters = ref({
   name: { value: null, matchMode: FilterMatchMode.CONTAINS }
@@ -165,14 +165,14 @@ onMounted(() => {
 });
 
 function openAddDialog() {
-  dialogHeader.value = 'Add Inventory Category';
+  dialogHeader.value = 'Add Product Category';
   data.value = {};
   submitted.value = false;
   addDialog.value = true;
 }
 
 function openEditDialog(item: any) {
-  dialogHeader.value = 'Edit Inventory Category';
+  dialogHeader.value = 'Edit Product Category';
   data.value = item;
   submitted.value = false;
   addDialog.value = true;
@@ -193,12 +193,12 @@ const saveForm = () => {
   submitted.value = true;
   if (data?.value.name?.trim()) {
     if (data?.value.id) {
-      updateRecordApi(`/inventory-categories/${data.value.id}`, data.value).then((res: any) => {
+      updateRecordApi(`/product-categories/${data.value.id}`, data.value).then((res: any) => {
         window.toast('success', 'Success Message', res.message);
         getList();
       });
     } else {
-      createRecordApi('/inventory-categories', data.value).then((res: any) => {
+      createRecordApi('/product-categories', data.value).then((res: any) => {
         window.toast('success', 'Success Message', res.message);
         getList();
       });
@@ -209,7 +209,7 @@ const saveForm = () => {
 };
 
 function handleDelete() {
-  deleteRecordApi(`/inventory-categories/${deleteId.value}`)
+  deleteRecordApi(`/product-categories/${deleteId.value}`)
     .then((res: any) => {
       window.toast('success', 'Success Message', res.message);
       getList();

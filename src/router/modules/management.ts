@@ -8,7 +8,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: 'Management',
       permissions: ['management menu'],
-      sort: 1
+      sort: 2
     },
     children: [
       {
@@ -41,16 +41,6 @@ const routes: RouteRecordRaw[] = [
         },
         component: () => import('@src/views/customer/index.vue')
       },
-      // {
-      //   path: '/customer/:customer_id/edit',
-      //   name: 'customer_edit',
-      //   meta: {
-      //     title: 'Edit Customer',
-      //     permissions: ['customer update'],
-      //     hidden: true
-      //   },
-      //   component: () => import('@src/components/customer/EditCustomer.vue')
-      // },
       {
         path: '/purchase',
         name: 'purchase',
@@ -62,24 +52,36 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@src/views/purchase/index.vue')
       },
       {
-        path: '/inventories',
-        name: 'inventories',
+        path: '/products',
+        name: 'products',
+        redirect: '/products/list',
         meta: {
-          title: 'Inventory',
+          title: 'Products',
           icon: 'pi pi-shopping-bag',
-          permissions: ['inventory menu']
+          permissions: ['product menu']
         },
-        component: () => import('@src/views/inventory/index.vue')
-      },
-      {
-        path: '/inventory-categories',
-        name: 'inventory_categories',
-        meta: {
-          title: 'Inventory Categories',
-          icon: 'pi pi-briefcase',
-          permissions: ['inventoryCategory menu']
-        },
-        component: () => import('@src/views/inventory_category/index.vue')
+        children: [
+          {
+            path: '/products/list',
+            name: 'products-list',
+            meta: {
+              title: 'Products',
+              icon: 'pi pi-briefcase',
+              permissions: ['product menu']
+            },
+            component: () => import('@src/views/product/index.vue')
+          },
+          {
+            path: '/product-categories',
+            name: 'product-categories',
+            meta: {
+              title: 'Categories',
+              icon: 'pi pi-briefcase',
+              permissions: ['product category menu']
+            },
+            component: () => import('@src/views/product_categories/index.vue')
+          }
+        ]
       }
     ]
   }
