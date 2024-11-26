@@ -22,7 +22,7 @@
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
       :currentPageReportTemplate="`Showing ${page} to ${perPage} of ${itemCount} Products Categories`"
     >
-      <template #empty> No Inventory Category found. </template>
+      <template #empty> No Product Categories found. </template>
       <Column field="name" header="Name" :show-filter-menu="false" :showClearButton="false">
         <template #body="{ data }">
           {{ data.name }}
@@ -87,6 +87,7 @@
           <label for="name" class="block font-bold mb-3">Name</label>
           <InputText
             id="name"
+            placeholder="Enter category name"
             v-model.trim="data.name"
             :required="true"
             :invalid="submitted && !data.name"

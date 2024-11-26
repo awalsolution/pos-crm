@@ -1,10 +1,11 @@
-@import '@src/assets/styles/layout/layout.scss';
-@import '@src/assets/styles/demo/demo.scss';
+@use 'layout/layout.scss';
+@use 'demo/demo.scss';
 @import 'primeicons/primeicons.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   .intro-x,
   .-intro-x,

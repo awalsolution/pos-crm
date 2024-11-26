@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="flex items-center justify-between mb-5">
-      <h1 class="text-2xl font-bold">Vendor List</h1>
+      <h1 class="text-2xl font-bold">Supplier List</h1>
       <Button
         @click="openAddDialog"
         severity="primary"
-        label="Add Vendor"
+        label="Add Supplier"
         icon="pi pi-plus"
-        v-permission="{ action: ['user create'] }"
+        v-permission="{ action: ['supplier create'] }"
       />
     </div>
     <DataTable
@@ -22,9 +22,9 @@
       :rows="20"
       :rowsPerPageOptions="pageSizes"
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-      :currentPageReportTemplate="`Showing ${page} to ${perPage} of ${itemCount} Users`"
+      :currentPageReportTemplate="`Showing ${page} to ${perPage} of ${itemCount} Suppliers`"
     >
-      <template #empty> <div class="text-center">No Users found.</div> </template>
+      <template #empty> <div class="text-center">No Suppliers found.</div> </template>
       <Column
         field="name"
         header="Name"
@@ -136,29 +136,29 @@
       </Column>
       <Column
         header="Actions"
-        v-permission="{ action: ['user update', 'user delete'] }"
+        v-permission="{ action: ['supplier update', 'supplier delete'] }"
         class="whitespace-nowrap"
         alignFrozen="right"
         frozen
       >
         <template #body="{ data }">
           <Button
-            v-tooltip.top="'Edit User'"
+            label="Edit Supplier"
             icon="pi pi-pencil"
             outlined
             rounded
             class="mr-2"
-            @click="router.push({ name: 'vendor_edit', params: { vendor_id: data.id } })"
-            v-permission="{ action: ['user update'] }"
+            @click="router.push({ name: 'supplier_edit', params: { supplier_id: data.id } })"
+            v-permission="{ action: ['supplier update'] }"
           />
           <Button
-            v-tooltip.top="'Delete User'"
+            label="Delete Supplier"
             icon="pi pi-trash"
             outlined
             rounded
             severity="danger"
             @click="openDeleteDialog(data)"
-            v-permission="{ action: ['user delete'] }"
+            v-permission="{ action: ['supplier delete'] }"
           />
         </template>
       </Column>
@@ -253,7 +253,7 @@
                 <label for="street" class="block font-bold mb-3">Street</label>
                 <InputText
                   id="street"
-                  v-model="data.shippingAddress.street"
+                  v-model.trim="data.shippingAddress.street"
                   placeholder="Street"
                   fluid
                 />
@@ -368,7 +368,7 @@
       </template>
     </Dialog>
     <!-- delete form -->
-    <Dialog v-model:visible="delDialog" class="w-1/3" header="Confirm" :modal="true">
+    <Dialog v-model:visible="deleteDialog" class="w-1/3" header="Confirm" :modal="true">
       <div class="flex items-center gap-4">
         <i class="pi pi-exclamation-triangle !text-3xl" />
         <span v-if="data">
@@ -376,7 +376,7 @@
         </span>
       </div>
       <template #footer>
-        <Button label="No" icon="pi pi-times" text @click="delDialog = false" />
+        <Button label="No" icon="pi pi-times" text @click="deleteDialog = false" />
         <Button label="Yes" icon="pi pi-check" severity="danger" @click="handleDelete" />
       </template>
     </Dialog>
@@ -423,12 +423,12 @@ const data: Ref = ref({
 });
 const submitted: Ref = ref({});
 const addDialog: Ref = ref(false);
-const delDialog: Ref = ref(false);
+const deleteDialog: Ref = ref(false);
 const dialogHeader: Ref = ref();
-const delId: Ref = ref();
+const deleteId: Ref = ref();
 
 const { getList, list, page, pageSizes, itemCount, perPage, searchParams }: any =
-  usePagination('/vendors');
+  usePagination('/suppliers');
 
 const filters = ref({
   name: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -458,22 +458,22 @@ onMounted(() => {
 });
 
 function openAddDialog() {
-  dialogHeader.value = 'Add Vendor';
+  dialogHeader.value = 'Add Supplier';
   submitted.value = false;
   addDialog.value = true;
 }
 
 function openEditDialog(item: any) {
-  dialogHeader.value = 'Edit Vendor';
+  dialogHeader.value = 'Edit Supplier';
   data.value = item;
   submitted.value = false;
   addDialog.value = true;
 }
 
 function openDeleteDialog(item: any) {
-  delId.value = item.id;
+  deleteId.value = item.id;
   data.value = item;
-  delDialog.value = true;
+  deleteDialog.value = true;
 }
 
 function hideDialog() {
@@ -485,12 +485,12 @@ function hideDialog() {
 const saveForm = () => {
   submitted.value = true;
   if (data?.value.id) {
-    updateRecordApi(`/vendors/${data.value.id}`, data.value).then((res: any) => {
+    updateRecordApi(`/suppliers/${data.value.id}`, data.value).then((res: any) => {
       window.toast('success', 'Success Message', res.message);
       getList();
     });
   } else {
-    createRecordApi('/vendors', data.value).then((res: any) => {
+    createRecordApi('/suppliers', data.value).then((res: any) => {
       window.toast('success', 'Success Message', res.message);
       getList();
     });
@@ -513,7 +513,7 @@ const saveForm = () => {
 };
 
 function handleDelete() {
-  deleteRecordApi(`/vendors/${delId.value}`)
+  deleteRecordApi(`/suppliers/${deleteId.value}`)
     .then((res: any) => {
       window.toast('success', 'Success Message', res.message);
       getList();
@@ -521,8 +521,8 @@ function handleDelete() {
     .catch((res) => {
       window.toast('error', 'Error Message', res.message);
     });
-  delDialog.value = false;
-  delId.value = null;
+  deleteDialog.value = false;
+  deleteId.value = null;
 }
 </script>
 

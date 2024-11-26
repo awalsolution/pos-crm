@@ -12,7 +12,7 @@
         </TabList>
         <TabPanels>
           <TabPanel :value="0">
-            <VendorGeneralInfo />
+            <SupplierGeneralInfo />
           </TabPanel>
           <TabPanel :value="1">
             <TenantPermissions v-if="permissionsList.length > 0" :list="permissionsList" />
@@ -42,7 +42,7 @@ import Card from 'primevue/card';
 import TenantUser from '@src/components/tenant/TenantUser.vue';
 import TenantRoles from '@src/components/tenant/TenantRoles.vue';
 import TenantPermissions from '@src/components/tenant/TenantPermissions.vue';
-import VendorGeneralInfo from './VendorGeneralInfo.vue';
+import SupplierGeneralInfo from './SupplierGeneralInfo.vue';
 
 const route = useRoute();
 const router = useRouter();

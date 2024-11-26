@@ -3,7 +3,7 @@ import { DashboardLayout } from '@src/router/constant';
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/vendor',
+    path: '/supplier',
     component: DashboardLayout,
     meta: {
       title: 'Management',
@@ -12,24 +12,24 @@ const routes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: '/vendor',
-        name: 'vendor',
+        path: '/supplier',
+        name: 'supplier',
         meta: {
-          title: 'Vendor',
+          title: 'Supplier',
           icon: 'pi pi-user',
-          permissions: ['vendor menu']
+          permissions: ['supplier menu']
         },
-        component: () => import('@src/views/vendor/index.vue')
+        component: () => import('@src/views/supplier/index.vue')
       },
       {
-        path: '/vendor/:vendor_id/edit',
-        name: 'vendor_edit',
+        path: '/supplier/:supplier_id/edit',
+        name: 'supplier_edit',
         meta: {
-          title: 'Edit Vendor',
-          permissions: ['vendor update'],
+          title: 'Edit Supplier',
+          permissions: ['supplier update'],
           hidden: true
         },
-        component: () => import('@src/components/vendor/EditVendor.vue')
+        component: () => import('@src/components/supplier/EditSupplier.vue')
       },
       {
         path: '/customer',
@@ -65,7 +65,7 @@ const routes: RouteRecordRaw[] = [
             path: '/products/list',
             name: 'products-list',
             meta: {
-              title: 'Products',
+              title: 'Products List',
               icon: 'pi pi-briefcase',
               permissions: ['product menu']
             },
