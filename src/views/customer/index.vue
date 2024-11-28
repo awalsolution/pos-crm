@@ -127,9 +127,9 @@
           {{ data?.tex_category }}
         </template>
       </Column>
-      <Column field="created_by" header="Auther" class="whitespace-nowrap">
+      <Column field="auther" header="Auther" class="whitespace-nowrap">
         <template #body="{ data }">
-          {{ data?.created_by }}
+          {{ data?.auther?.name }}
         </template>
       </Column>
       <Column field="created_at" header="Created At" class="whitespace-nowrap">

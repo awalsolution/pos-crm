@@ -11,11 +11,11 @@ export const ErrorPageRoute: RouteRecordRaw = {
   },
   children: [
     {
-      path: '/:path(.*)*',
-      name: 'ErrorPageSon',
+      path: 'child',
+      name: 'ErrorPageChild',
       component: ErrorPage,
       meta: {
-        title: 'Error Page'
+        title: 'Error Page Child'
       }
     }
   ]
@@ -31,11 +31,11 @@ export const RedirectRoute: RouteRecordRaw = {
   },
   children: [
     {
-      path: '/redirect/:path(.*)',
-      name: RedirectName,
+      path: ':path(.*)',
+      name: `${RedirectName}Child`,
       component: () => import('@src/views/common/redirect/index.vue'),
       meta: {
-        title: RedirectName,
+        title: 'Redirect Child',
         dismissTab: true
       }
     }

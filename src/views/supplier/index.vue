@@ -124,9 +124,9 @@
           </Tag>
         </template>
       </Column>
-      <Column field="created_by" header="Auther" class="whitespace-nowrap">
+      <Column field="auther" header="Auther" class="whitespace-nowrap">
         <template #body="{ data }">
-          {{ data?.created_by }}
+          {{ data?.auther?.name }}
         </template>
       </Column>
       <Column field="created_at" header="Created At" class="whitespace-nowrap">
@@ -175,36 +175,19 @@
         <div class="flex gap-5">
           <div class="w-full">
             <label for="name" class="block font-bold mb-3">Name</label>
-            <InputText
-              id="name"
-              v-model.trim="data.name"
-              :required="true"
-              :invalid="submitted && !data.name"
-              placeholder="Name"
-              fluid
-            />
-            <small v-if="submitted && !data.name" class="text-red-500"> Name is required. </small>
+            <InputText id="name" v-model="data.name" placeholder="Name" fluid />
           </div>
           <div class="w-full">
             <label for="contact" class="block font-bold mb-3">Contact</label>
-            <InputText id="contact" v-model.trim="data.contact" placeholder="Contect" fluid />
-            <!-- <small v-if="submitted && !data.first_name" class="text-red-500">
-              Contact is required.
-            </small> -->
+            <InputText id="contact" v-model="data.contact" placeholder="Contect" fluid />
           </div>
           <div class="w-full">
             <label for="phone" class="block font-bold mb-3">Phone</label>
-            <InputText id="phone" v-model.trim="data.phone" placeholder="Phone" fluid />
-            <!-- <small v-if="submitted && !data.first_name" class="text-red-500">
-              Phone is required.
-            </small> -->
+            <InputText id="phone" v-model="data.phone" placeholder="Phone" fluid />
           </div>
           <div class="w-full">
             <label for="email" class="block font-bold mb-3">Email</label>
-            <InputText id="email" v-model.trim="data.email" placeholder="Email" fluid />
-            <!-- <small v-if="submitted && !data.last_name" class="text-red-500">
-              Email is required.
-            </small> -->
+            <InputText id="email" v-model="data.email" placeholder="Email" fluid />
           </div>
         </div>
         <div class="flex gap-5">
@@ -243,6 +226,7 @@
             />
           </div>
         </div>
+
         <div class="grid grid-cols-2 gap-5">
           <div class="2xl:col-span-1 col-span-2">
             <Divider align="center" type="dotted" class="2xl:col-span-1 col-span-2">
@@ -253,7 +237,7 @@
                 <label for="street" class="block font-bold mb-3">Street</label>
                 <InputText
                   id="street"
-                  v-model.trim="data.shippingAddress.street"
+                  v-model.trim="data.shipping_address.street"
                   placeholder="Street"
                   fluid
                 />
@@ -262,7 +246,7 @@
                 <label for="city" class="block font-bold mb-3">City</label>
                 <InputText
                   id="city"
-                  v-model.trim="data.shippingAddress.city"
+                  v-model.trim="data.shipping_address.city"
                   placeholder="City"
                   fluid
                 />
@@ -271,7 +255,7 @@
                 <label for="state" class="block font-bold mb-3">State</label>
                 <InputText
                   id="state"
-                  v-model.trim="data.shippingAddress.state"
+                  v-model.trim="data.shipping_address.state"
                   placeholder="State"
                   fluid
                 />
@@ -280,7 +264,7 @@
                 <label for="zip" class="block font-bold mb-3">Zip</label>
                 <InputText
                   id="zip"
-                  v-model.trim="data.shippingAddress.zip"
+                  v-model.trim="data.shipping_address.zip"
                   placeholder="Zip"
                   fluid
                 />
@@ -289,7 +273,7 @@
                 <label for="country" class="block font-bold mb-3">Country</label>
                 <InputText
                   id="country"
-                  v-model.trim="data.shippingAddress.country"
+                  v-model.trim="data.shipping_address.country"
                   placeholder="Country"
                   fluid
                 />
@@ -301,47 +285,47 @@
               Mailing Address
             </Divider>
             <div class="grid grid-cols-2 gap-3">
-              <div v-if="!data.sameAsShipping" class="w-full">
+              <div v-if="!data.same_as_shipping" class="w-full">
                 <label for="street" class="block font-bold mb-3">Street</label>
                 <InputText
                   id="street"
-                  v-model.trim="data.mailingAddress.street"
+                  v-model.trim="data.mailing_address.street"
                   placeholder="Street"
                   fluid
                 />
               </div>
-              <div v-if="!data.sameAsShipping" class="w-full">
+              <div v-if="!data.same_as_shipping" class="w-full">
                 <label for="city" class="block font-bold mb-3">City</label>
                 <InputText
                   id="city"
-                  v-model.trim="data.mailingAddress.city"
+                  v-model.trim="data.mailing_address.city"
                   placeholder="City"
                   fluid
                 />
               </div>
-              <div v-if="!data.sameAsShipping" class="w-full">
+              <div v-if="!data.same_as_shipping" class="w-full">
                 <label for="state" class="block font-bold mb-3">State</label>
                 <InputText
                   id="state"
-                  v-model.trim="data.mailingAddress.state"
+                  v-model.trim="data.mailing_address.state"
                   placeholder="State"
                   fluid
                 />
               </div>
-              <div v-if="!data.sameAsShipping" class="w-full">
+              <div v-if="!data.same_as_shipping" class="w-full">
                 <label for="zip" class="block font-bold mb-3">Zip</label>
                 <InputText
                   id="zip"
-                  v-model.trim="data.mailingAddress.zip"
+                  v-model.trim="data.mailing_address.zip"
                   placeholder="Zip"
                   fluid
                 />
               </div>
-              <div v-if="!data.sameAsShipping" class="w-full">
+              <div v-if="!data.same_as_shipping" class="w-full">
                 <label for="country" class="block font-bold mb-3">Country</label>
                 <InputText
                   id="country"
-                  v-model.trim="data.mailingAddress.country"
+                  v-model.trim="data.mailing_address.country"
                   placeholder="Country"
                   fluid
                 />
@@ -350,17 +334,11 @@
                 <label for="sameAddress" class="block font-bold mb-3"
                   >Same As Shipping Address</label
                 >
-                <ToggleSwitch v-model="data.sameAsShipping" />
+                <ToggleSwitch v-model="data.same_as_shipping" />
               </div>
             </div>
           </div>
         </div>
-        <!-- <div class="flex gap-5">
-          <div class="w-full">
-            <label for="status" class="block font-bold mb-3">Status</label>
-            <ToggleSwitch id="status" v-model="data.status" :true-value="1" :false-value="0" />
-          </div>
-        </div> -->
       </div>
       <template #footer>
         <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />

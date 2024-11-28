@@ -44,9 +44,9 @@
           </Tag>
         </template>
       </Column>
-      <Column field="created_by" header="Auther">
+      <Column field="auther" header="Auther">
         <template #body="{ data }">
-          {{ data.created_by }}
+          {{ data.auther.name }}
         </template>
       </Column>
       <Column field="created_at" header="Created At">
