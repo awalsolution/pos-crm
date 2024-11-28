@@ -54,7 +54,6 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/products',
         name: 'products',
-        redirect: '/products/list',
         meta: {
           title: 'Products',
           icon: 'pi pi-shopping-bag',
@@ -63,13 +62,33 @@ const routes: RouteRecordRaw[] = [
         children: [
           {
             path: '/products/list',
-            name: 'products-list',
+            name: 'products_list',
             meta: {
               title: 'Products List',
               icon: 'pi pi-briefcase',
               permissions: ['product menu']
             },
             component: () => import('@src/views/product/index.vue')
+          },
+          {
+            path: '/products/add',
+            name: 'products_add',
+            meta: {
+              title: 'Add Product',
+              icon: 'pi pi-briefcase',
+              permissions: ['product create']
+            },
+            component: () => import('@src/components/product/AddProduct.vue')
+          },
+          {
+            path: '/products/edit',
+            name: 'products_edit',
+            meta: {
+              title: 'Edit Product',
+              icon: 'pi pi-briefcase',
+              permissions: ['product update']
+            },
+            component: () => import('@src/components/product/EditProduct.vue')
           },
           {
             path: '/product-categories',

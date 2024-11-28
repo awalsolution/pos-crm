@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between mb-5">
       <h1 class="text-2xl font-bold">Products List</h1>
       <Button
-        @click="openAddDialog"
+        @click="router.push('/products/add')"
         severity="primary"
         label="Add Product"
         icon="pi pi-plus"
@@ -22,8 +22,14 @@
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
       :currentPageReportTemplate="`Showing ${page} to ${perPage} of ${itemCount} Products`"
     >
-      <template #empty> No Inventories found. </template>
-      <Column field="name" header="Name" :show-filter-menu="false" :showClearButton="false">
+      <template #empty> No Products found. </template>
+      <Column
+        field="name"
+        header="Name"
+        :show-filter-menu="false"
+        :showClearButton="false"
+        class="whitespace-nowrap min-w-48"
+      >
         <template #body="{ data }">
           {{ data.name }}
         </template>
@@ -37,19 +43,84 @@
           />
         </template>
       </Column>
-      <Column field="status" header="status">
+      <Column field="tax_able" header="Tax Able" class="whitespace-nowrap">
+        <template #body="{ data }">
+          <ToggleSwitch v-model="data.tax_able" disabled />
+        </template>
+      </Column>
+      <Column field="gst" header="GST" class="whitespace-nowrap">
+        <template #body="{ data }">
+          <ToggleSwitch v-model="data.gst" disabled />
+        </template>
+      </Column>
+      <Column field="status" header="Status" class="whitespace-nowrap">
+        <template #body="{ data }">
+          <ToggleSwitch v-model="data.status" disabled />
+        </template>
+      </Column>
+      <!-- <Column field="status" header="status">
         <template #body="{ data }">
           <Tag :value="data.status" :severity="data.status === 0 ? 'error' : 'info'">
             {{ data.status === 1 ? 'Active' : 'Disable' }}
           </Tag>
         </template>
-      </Column>
-      <Column field="created_by" header="Auther">
+      </Column> -->
+      <Column field="weight" header="Weight" class="whitespace-nowrap">
         <template #body="{ data }">
-          {{ data.created_by }}
+          {{ data.weight }}
         </template>
       </Column>
-      <Column field="created_at" header="Created At">
+      <Column field="base_price" header="Base Price" class="whitespace-nowrap">
+        <template #body="{ data }">
+          {{ data.base_price }}
+        </template>
+      </Column>
+      <Column field="list_price" header="List Price" class="whitespace-nowrap">
+        <template #body="{ data }">
+          {{ data.list_price }}
+        </template>
+      </Column>
+      <Column field="discount" header="Discount" class="whitespace-nowrap">
+        <template #body="{ data }">
+          {{ data.discount }}
+        </template>
+      </Column>
+      <Column field="reminder" header="Reminder" class="whitespace-nowrap">
+        <template #body="{ data }">
+          {{ data.reminder }}
+        </template>
+      </Column>
+      <Column field="location" header="Location" class="whitespace-nowrap">
+        <template #body="{ data }">
+          {{ data.location }}
+        </template>
+      </Column>
+      <Column field="min_qty" header="min Qty" class="whitespace-nowrap">
+        <template #body="{ data }">
+          {{ data.min_qty }}
+        </template>
+      </Column>
+      <Column field="target_qty" header="Target Qty" class="whitespace-nowrap">
+        <template #body="{ data }">
+          {{ data.target_qty }}
+        </template>
+      </Column>
+      <Column field="manufacture" header="Manufacture" class="whitespace-nowrap">
+        <template #body="{ data }">
+          {{ data.manufacture }}
+        </template>
+      </Column>
+      <Column field="thumbnail" header="Thumbnail" class="whitespace-nowrap">
+        <template #body="{ data }">
+          <Image :src="data.manufacture" alt="Image" width="100" />
+        </template>
+      </Column>
+      <Column field="auther" header="Auther">
+        <template #body="{ data }">
+          {{ data.auther.name }}
+        </template>
+      </Column>
+      <Column field="created_at" header="Created At" class="whitespace-nowrap">
         <template #body="{ data }">
           {{ data.created_at }}
         </template>
@@ -119,19 +190,15 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, type Ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { FilterMatchMode } from '@primevue/core/api';
-import ToggleSwitch from 'primevue/toggleswitch';
-import Dialog from 'primevue/dialog';
-import Button from 'primevue/button';
-import InputText from 'primevue/inputtext';
-import Tag from 'primevue/tag';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
+import { Image, ToggleSwitch, Dialog, Button, InputText, DataTable, Column } from 'primevue';
 import { createRecordApi, deleteRecordApi, updateRecordApi } from '@src/api/endpoints';
 import { usePagination } from '@src/hooks/pagination/usePagination';
 import { usePermission } from '@src/hooks/permission/usePermission';
 import { debounce } from 'lodash-es';
 
+const router = useRouter();
 const data: Ref = ref({});
 const submitted: Ref = ref({});
 const addDialog: Ref = ref(false);
