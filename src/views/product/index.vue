@@ -45,26 +45,20 @@
       </Column>
       <Column field="tax_able" header="Tax Able" class="whitespace-nowrap">
         <template #body="{ data }">
-          <ToggleSwitch v-model="data.tax_able" disabled />
+          <ToggleSwitch :default-value="data.tax_able === 1 ? true : false" disabled />
         </template>
       </Column>
       <Column field="gst" header="GST" class="whitespace-nowrap">
         <template #body="{ data }">
-          <ToggleSwitch v-model="data.gst" disabled />
+          <ToggleSwitch :default-value="data.gst === 1 ? true : false" disabled />
         </template>
       </Column>
       <Column field="status" header="Status" class="whitespace-nowrap">
         <template #body="{ data }">
-          <ToggleSwitch v-model="data.status" disabled />
+          <ToggleSwitch :default-value="data.status === 1 ? true : false" disabled />
         </template>
       </Column>
-      <!-- <Column field="status" header="status">
-        <template #body="{ data }">
-          <Tag :value="data.status" :severity="data.status === 0 ? 'error' : 'info'">
-            {{ data.status === 1 ? 'Active' : 'Disable' }}
-          </Tag>
-        </template>
-      </Column> -->
+
       <Column field="weight" header="Weight" class="whitespace-nowrap">
         <template #body="{ data }">
           {{ data.weight }}
@@ -115,7 +109,7 @@
           <Image :src="data.manufacture" alt="Image" width="100" />
         </template>
       </Column>
-      <Column field="auther" header="Auther">
+      <Column field="auther" header="Auther" class="whitespace-nowrap">
         <template #body="{ data }">
           {{ data.auther.name }}
         </template>
@@ -125,7 +119,11 @@
           {{ data.created_at }}
         </template>
       </Column>
-      <Column header="Actions" v-if="hasPermission(['product update', 'product delete'])">
+      <Column
+        header="Actions"
+        class="whitespace-nowrap"
+        v-if="hasPermission(['product update', 'product delete'])"
+      >
         <template #body="{ data }">
           <Button
             label="Edit"
@@ -133,7 +131,7 @@
             outlined
             rounded
             class="mr-2"
-            @click="openEditDialog(data)"
+            @click="router.push(`/products/edit/${data.id}`)"
             v-permission="{ action: ['product update'] }"
           />
           <Button
@@ -148,30 +146,7 @@
         </template>
       </Column>
     </DataTable>
-    <!-- add edit form -->
-    <Dialog v-model:visible="addDialog" class="w-1/3" :header="dialogHeader" :modal="true">
-      <div class="flex flex-col gap-6">
-        <div>
-          <label for="name" class="block font-bold mb-3">Name</label>
-          <InputText
-            id="name"
-            v-model.trim="data.name"
-            :required="true"
-            :invalid="submitted && !data.name"
-            fluid
-          />
-          <small v-if="submitted && !data.name" class="text-red-500">Name is required.</small>
-        </div>
-        <div>
-          <label for="status" class="block font-bold mb-3">Status</label>
-          <ToggleSwitch id="status" v-model="data.status" :true-value="1" :false-value="0" />
-        </div>
-      </div>
-      <template #footer>
-        <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
-        <Button label="Save" icon="pi pi-check" @click="saveForm" />
-      </template>
-    </Dialog>
+
     <!-- delete form  -->
     <Dialog v-model:visible="deleteDialog" class="w-1/3" header="Confirm" :modal="true">
       <div class="flex items-center gap-4">
@@ -193,17 +168,14 @@ import { ref, onMounted, type Ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { FilterMatchMode } from '@primevue/core/api';
 import { Image, ToggleSwitch, Dialog, Button, InputText, DataTable, Column } from 'primevue';
-import { createRecordApi, deleteRecordApi, updateRecordApi } from '@src/api/endpoints';
+import { deleteRecordApi } from '@src/api/endpoints';
 import { usePagination } from '@src/hooks/pagination/usePagination';
 import { usePermission } from '@src/hooks/permission/usePermission';
 import { debounce } from 'lodash-es';
 
 const router = useRouter();
 const data: Ref = ref({});
-const submitted: Ref = ref({});
-const addDialog: Ref = ref(false);
 const deleteDialog: Ref = ref(false);
-const dialogHeader: Ref = ref();
 const deleteId: Ref = ref();
 const { hasPermission } = usePermission();
 
@@ -230,62 +202,18 @@ onMounted(() => {
   fetchList();
 });
 
-function openAddDialog() {
-  dialogHeader.value = 'Add Aroduct';
-  data.value = {};
-  submitted.value = false;
-  addDialog.value = true;
-}
-
-function openEditDialog(item: any) {
-  dialogHeader.value = 'Edit Product';
-  data.value = item;
-  submitted.value = false;
-  addDialog.value = true;
-}
-
 function openDeleteDialog(item: any) {
   deleteId.value = item.id;
   data.value = item;
   deleteDialog.value = true;
 }
-
-function hideDialog() {
-  addDialog.value = false;
-  submitted.value = false;
-}
-
-const saveForm = () => {
-  submitted.value = true;
-  if (data?.value.name?.trim()) {
-    if (data?.value.id) {
-      updateRecordApi(`/products/${data.value.id}`, data.value).then((res: any) => {
-        window.toast('success', 'Success Message', res.message);
-        getList();
-      });
-    } else {
-      createRecordApi('/products', data.value).then((res: any) => {
-        window.toast('success', 'Success Message', res.message);
-        getList();
-      });
-    }
-    addDialog.value = false;
-    data.value = {};
-  }
-};
-
-function handleDelete() {
-  deleteRecordApi(`/products/${deleteId.value}`)
-    .then((res: any) => {
-      window.toast('success', 'Success Message', res.message);
-      getList();
-    })
-    .catch((res) => {
-      window.toast('error', 'Error Message', res.message);
-    });
+const handleDelete = async () => {
+  const res: any = await deleteRecordApi(`/products/${deleteId.value}`);
+  window.toast('success', 'Success Message', res.message);
+  getList();
   deleteDialog.value = false;
   deleteId.value = null;
-}
+};
 </script>
 
 <style lang="scss" scoped></style>

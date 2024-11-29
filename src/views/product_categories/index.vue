@@ -44,7 +44,7 @@
           </Tag>
         </template>
       </Column>
-      <Column field="auther" header="Auther">
+      <Column class="whitespace-nowrap" field="auther" header="Auther">
         <template #body="{ data }">
           {{ data.auther.name }}
         </template>

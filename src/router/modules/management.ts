@@ -81,12 +81,13 @@ const routes: RouteRecordRaw[] = [
             component: () => import('@src/components/product/AddProduct.vue')
           },
           {
-            path: '/products/edit',
+            path: '/products/edit/:product_id',
             name: 'products_edit',
             meta: {
               title: 'Edit Product',
               icon: 'pi pi-briefcase',
-              permissions: ['product update']
+              permissions: ['product update'],
+              hidden: true
             },
             component: () => import('@src/components/product/EditProduct.vue')
           },
