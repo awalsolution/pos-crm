@@ -218,11 +218,6 @@
         </div>
       </Form>
     </template>
-    <!-- <template #footer>
-      <div class="flex gap-4 mt-3 justify-end">
-        <Button label="Save" @click="onFormSubmit" />
-      </div>
-    </template> -->
   </Card>
 </template>
 
@@ -230,7 +225,16 @@
 import { onMounted, ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { createRecordApi } from '@src/api/endpoints';
-import { InputText, Divider, Button, Card, InputNumber, Select, ToggleSwitch } from 'primevue';
+import {
+  InputText,
+  Divider,
+  Button,
+  Card,
+  InputNumber,
+  Select,
+  ToggleSwitch,
+  Message
+} from 'primevue';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { Form, type FormSubmitEvent } from '@primevue/forms';
 import { z } from 'zod';
@@ -255,9 +259,9 @@ const resolver = ref(
       discount: z.number({ message: 'discount is required!' }),
       min_qty: z.number({ message: 'Min qty is required!' }),
       target_qty: z.number({ message: 'Target qty is required!' }),
-      gst: z.boolean().optional(),
-      tax_able: z.boolean().optional(),
-      status: z.boolean().optional()
+      gst: z.number().optional(),
+      tax_able: z.number().optional(),
+      status: z.number().optional()
     })
   )
 );

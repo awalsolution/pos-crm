@@ -51,7 +51,6 @@ export const LoginRoute: RouteRecordRaw = {
 };
 
 export const asyncRoutes = [...routeModuleList];
-console.log(asyncRoutes);
 
 export const constantRouter: RouteRecordRaw[] = [LoginRoute, RootRoute, RedirectRoute];
 
