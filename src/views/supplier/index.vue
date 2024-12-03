@@ -331,9 +331,9 @@
                 />
               </div>
               <div class="w-full">
-                <label for="sameAddress" class="block font-bold mb-3"
-                  >Same As Shipping Address</label
-                >
+                <label for="sameAddress" class="block font-bold mb-3">
+                  Same As Shipping Address
+                </label>
                 <ToggleSwitch v-model="data.same_as_shipping" />
               </div>
             </div>
