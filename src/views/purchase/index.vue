@@ -20,12 +20,31 @@
       :rows="20"
       :rowsPerPageOptions="pageSizes"
       paginatorTemplate="FirstPageLink PrevPageLink PageLinks  NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-      :currentPageReportTemplate="`Showing ${page} to ${perPage} of ${itemCount} Purchase`"
+      :currentPageReportTemplate="`Showing ${page} to ${perPage} of ${itemCount} Purchases`"
     >
       <template #empty> No Purchase found. </template>
-      <Column field="name" header="Name" :show-filter-menu="false" :showClearButton="false">
+      <Column field="id" header="SN#" :show-filter-menu="false" :showClearButton="false">
         <template #body="{ data }">
-          {{ data.name }}
+          {{ data.id }}
+        </template>
+        <template #filter="{ filterModel, filterCallback }">
+          <InputText
+            v-model="filterModel.value"
+            type="text"
+            placeholder="Search by ID"
+            @input="filterCallback"
+            class="w-full"
+          />
+        </template>
+      </Column>
+      <Column
+        field="name"
+        header="Supplier Name"
+        :show-filter-menu="false"
+        :showClearButton="false"
+      >
+        <template #body="{ data }">
+          {{ data.supplier.name }}
         </template>
         <template #filter="{ filterModel, filterCallback }">
           <InputText
@@ -39,14 +58,14 @@
       </Column>
       <Column field="status" header="status">
         <template #body="{ data }">
-          <Tag :value="data.status" :severity="data.status === 0 ? 'error' : 'info'">
-            {{ data.status === 1 ? 'Active' : 'Disable' }}
+          <Tag severity="primary">
+            {{ data.status }}
           </Tag>
         </template>
       </Column>
-      <Column field="created_by" header="Auther">
+      <Column field="auther" header="Auther">
         <template #body="{ data }">
-          {{ data.created_by }}
+          {{ data.auther.name }}
         </template>
       </Column>
       <Column field="created_at" header="Created At">
@@ -56,7 +75,7 @@
       </Column>
       <Column header="Actions" v-permission="{ action: ['purchase update', 'purchase delete'] }">
         <template #body="{ data }">
-          <Button
+          <!-- <Button
             label="Edit"
             icon="pi pi-pen-to-square"
             outlined
@@ -73,36 +92,55 @@
             severity="danger"
             @click="openDeleteDialog(data)"
             v-permission="{ action: ['purchase delete'] }"
-          />
+          /> -->
         </template>
       </Column>
     </DataTable>
     <!-- add edit form -->
     <Dialog v-model:visible="addDialog" class="w-1/3" :header="dialogHeader" :modal="true">
-      <div class="flex flex-col gap-6">
-        <div>
-          <label for="name" class="block font-bold mb-3">Name</label>
-          <InputText
-            id="name"
-            v-model.trim="data.name"
-            :required="true"
-            :invalid="submitted && !data.name"
+      <Form
+        v-slot="$form: any"
+        :resolver="resolver"
+        :initialValues="formValues"
+        @submit="onFormSubmit"
+      >
+        <div class="flex flex-col gap-1 mb-3">
+          <label for="supplier_id" class="block font-semibold mb-1"> Select Supplier </label>
+          <Select
+            id="supplier_id"
+            name="supplier_id"
+            :options="suppliers"
+            option-label="name"
+            option-value="id"
+            placeholder="Select supplier"
+            variant="filled"
             fluid
           />
-          <small v-if="submitted && !data.name" class="text-red-500">Name is required.</small>
+          <Message v-if="$form.supplier_id?.invalid" severity="error" size="small" variant="simple">
+            {{ $form.supplier_id.error?.message }}
+          </Message>
         </div>
-        <div>
-          <label for="status" class="block font-bold mb-3">Status</label>
-          <ToggleSwitch id="status" v-model="data.status" :true-value="1" :false-value="0" />
+        <div class="flex flex-col gap-1">
+          <label class="block font-semibold mb-1">Notes</label>
+          <Textarea
+            name="notes"
+            rows="5"
+            cols="30"
+            placeholder="Enter Notes"
+            variant="filled"
+            fluid
+          />
+          <Message v-if="$form.notes?.invalid" severity="error" size="small" variant="simple">
+            {{ $form.notes.error?.message }}
+          </Message>
         </div>
-      </div>
-      <template #footer>
-        <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
-        <Button label="Save" icon="pi pi-check" @click="saveForm" />
-      </template>
+        <div class="flex justify-end">
+          <Button type="submit" severity="primary" label="Save" class="mt-5" />
+        </div>
+      </Form>
     </Dialog>
     <!-- delete form  -->
-    <Dialog v-model:visible="deleteDialog" class="w-1/3" header="Confirm" :modal="true">
+    <!-- <Dialog v-model:visible="deleteDialog" class="w-1/3" header="Confirm" :modal="true">
       <div class="flex items-center gap-4">
         <i class="pi pi-exclamation-triangle !text-3xl" />
         <span v-if="data">
@@ -113,35 +151,49 @@
         <Button label="No" icon="pi pi-times" text @click="deleteDialog = false" />
         <Button label="Yes" icon="pi pi-check" severity="danger" @click="handleDelete" />
       </template>
-    </Dialog>
+    </Dialog> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted, type Ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { FilterMatchMode } from '@primevue/core/api';
-import ToggleSwitch from 'primevue/toggleswitch';
-import Dialog from 'primevue/dialog';
-import Button from 'primevue/button';
-import InputText from 'primevue/inputtext';
-import Tag from 'primevue/tag';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import { createRecordApi, deleteRecordApi, updateRecordApi } from '@src/api/endpoints';
+import {
+  Dialog,
+  Button,
+  InputText,
+  Textarea,
+  Select,
+  Tag,
+  DataTable,
+  Column,
+  Message
+} from 'primevue';
+import { zodResolver } from '@primevue/forms/resolvers/zod';
+import { Form, type FormSubmitEvent } from '@primevue/forms';
+import { z } from 'zod';
+import {
+  createRecordApi
+  // deleteRecordApi, updateRecordApi
+} from '@src/api/endpoints';
 import { usePagination } from '@src/hooks/pagination/usePagination';
 import { debounce } from 'lodash-es';
+import { useSupplierfilter } from '@src/filters/supplier';
 
-const data: Ref = ref({});
-const submitted: Ref = ref({});
+const router = useRouter();
+const { suppliers, getSuppliers } = useSupplierfilter();
+const formValues = ref({});
 const addDialog: Ref = ref(false);
-const deleteDialog: Ref = ref(false);
+// const deleteDialog: Ref = ref(false);
 const dialogHeader: Ref = ref();
-const deleteId: Ref = ref();
+// const deleteId: Ref = ref();
 
 const { getList, list, page, pageSizes, itemCount, perPage, searchParams }: any =
   usePagination('/purchases');
 
 const filters = ref({
+  id: { value: null, matchMode: FilterMatchMode.CONTAINS },
   name: { value: null, matchMode: FilterMatchMode.CONTAINS }
 });
 
@@ -153,70 +205,51 @@ const fetchList = () => {
 };
 // Debounce fetchList by 2 seconds
 const debouncedFetchList = debounce(fetchList, 1000);
-
 // Watch filters and call the debounced function when they change
 watch(filters, debouncedFetchList, { deep: true });
 
-onMounted(() => {
+onMounted(async () => {
+  await getSuppliers();
   fetchList();
 });
 
+const resolver = ref(
+  zodResolver(
+    z.object({
+      supplier_id: z.number({ message: 'Supplier is required!' }),
+      notes: z.string().optional()
+    })
+  )
+);
+
 function openAddDialog() {
   dialogHeader.value = 'Add Purchase';
-  data.value = {};
-  submitted.value = false;
+  formValues.value = {};
   addDialog.value = true;
 }
 
-function openEditDialog(item: any) {
-  dialogHeader.value = 'Edit Purchase';
-  data.value = item;
-  submitted.value = false;
-  addDialog.value = true;
-}
-
-function openDeleteDialog(item: any) {
-  deleteId.value = item.id;
-  data.value = item;
-  deleteDialog.value = true;
-}
-
-function hideDialog() {
-  addDialog.value = false;
-  submitted.value = false;
-}
-
-const saveForm = () => {
-  submitted.value = true;
-  if (data?.value.name?.trim()) {
-    if (data?.value.id) {
-      updateRecordApi(`/purchases/${data.value.id}`, data.value).then((res: any) => {
-        window.toast('success', 'Success Message', res.message);
-        getList();
-      });
-    } else {
-      createRecordApi('/purchases', data.value).then((res: any) => {
-        window.toast('success', 'Success Message', res.message);
-        getList();
-      });
-    }
-    addDialog.value = false;
-    data.value = {};
+const onFormSubmit = async ({ valid, values }: FormSubmitEvent) => {
+  if (valid) {
+    const res: any = await createRecordApi('/purchases', values);
+    window.toast('success', 'Purchase Information', res.message);
+    // router.push({ name: 'purchase_list' });
+    addDialog.value = true;
+    formValues.value = {};
   }
 };
 
-function handleDelete() {
-  deleteRecordApi(`/purchases/${deleteId.value}`)
-    .then((res: any) => {
-      window.toast('success', 'Success Message', res.message);
-      getList();
-    })
-    .catch((res) => {
-      window.toast('error', 'Error Message', res.message);
-    });
-  deleteDialog.value = false;
-  deleteId.value = null;
-}
+// function handleDelete() {
+//   deleteRecordApi(`/purchases/${deleteId.value}`)
+//     .then((res: any) => {
+//       window.toast('success', 'Success Message', res.message);
+//       getList();
+//     })
+//     .catch((res) => {
+//       window.toast('error', 'Error Message', res.message);
+//     });
+//   deleteDialog.value = false;
+//   deleteId.value = null;
+// }
 </script>
 
 <style lang="scss" scoped></style>

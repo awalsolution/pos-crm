@@ -266,12 +266,11 @@ const resolver = ref(
   )
 );
 
-const onFormSubmit = ({ valid, values }: FormSubmitEvent) => {
+const onFormSubmit = async ({ valid, values }: FormSubmitEvent) => {
   if (valid) {
-    createRecordApi('/products', values).then((res: any) => {
-      window.toast('success', 'Product Information', res.message);
-      router.push({ name: 'products_list' });
-    });
+    const res: any = await createRecordApi('/products', values);
+    window.toast('success', 'Product Information', res.message);
+    router.push({ name: 'products_list' });
   }
 };
 

@@ -49,7 +49,18 @@ const routes: RouteRecordRaw[] = [
           icon: 'pi pi-shopping-cart',
           permissions: ['purchase menu']
         },
-        component: () => import('@src/views/purchase/index.vue')
+        children: [
+          {
+            path: '/purchase/list',
+            name: 'purchase_list',
+            meta: {
+              title: 'Purchase List',
+              icon: 'pi pi-shopping-cart',
+              permissions: ['purchase menu']
+            },
+            component: () => import('@src/views/purchase/index.vue')
+          }
+        ]
       },
       {
         path: '/products',
