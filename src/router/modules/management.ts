@@ -14,23 +14,46 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/supplier',
         name: 'supplier',
+        redirect: '/supplier/list',
         meta: {
           title: 'Supplier',
           icon: 'pi pi-user',
           permissions: ['supplier menu']
         },
-        component: () => import('@src/views/supplier/index.vue')
+        children: [
+          {
+            path: '/supplier/list',
+            name: 'supplier_list',
+            meta: {
+              title: 'Supplier List',
+              icon: 'pi pi-user',
+              permissions: ['supplier menu']
+            },
+            component: () => import('@src/views/supplier/index.vue')
+          },
+          {
+            path: '/supplier/add',
+            name: 'supplier_add',
+            meta: {
+              title: 'Add Supplier',
+              icon: 'pi pi-user',
+              permissions: ['supplier create']
+            },
+            component: () => import('@src/components/supplier/AddSupplier.vue')
+          },
+          {
+            path: '/supplier/:supplier_id/edit',
+            name: 'supplier_edit',
+            meta: {
+              title: 'Edit Supplier',
+              permissions: ['supplier update'],
+              hidden: true
+            },
+            component: () => import('@src/components/supplier/EditSupplier.vue')
+          }
+        ]
       },
-      {
-        path: '/supplier/:supplier_id/edit',
-        name: 'supplier_edit',
-        meta: {
-          title: 'Edit Supplier',
-          permissions: ['supplier update'],
-          hidden: true
-        },
-        component: () => import('@src/components/supplier/EditSupplier.vue')
-      },
+
       {
         path: '/customer',
         name: 'customer',
