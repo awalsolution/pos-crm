@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between mb-5">
       <h1 class="text-2xl font-bold">Supplier List</h1>
       <Button
-        @click="openAddDialog"
+        @click="router.push('/supplier/add')"
         severity="primary"
         label="Add Supplier"
         icon="pi pi-plus"
