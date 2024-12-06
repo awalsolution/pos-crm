@@ -8,46 +8,78 @@
       >
         <b class="text-xl">Add Supplier</b>
       </Divider>
-      <Form
-        v-slot="$form: any"
-        :resolver="resolver"
-        :initialValues="formValues"
-        @submit="onFormSubmit"
-      >
-        <div class="grid grid-cols-3 gap-5">
-          <div class="flex flex-col gap-1">
-            <label for="name" class="block font-semibold mb-1">Name</label>
-            <InputText id="name" name="name" placeholder="Enter name" variant="filled" fluid />
-            <Message v-if="$form.name?.invalid" severity="error" size="small" variant="simple">
-              {{ $form.name.error?.message }}
-            </Message>
-          </div>
-
-          <div class="flex flex-col gap-1">
-            <label for="contact" class="block font-bold mb-1">Contact</label>
+      <div class="flex flex-col gap-6">
+        <div class="flex gap-5">
+          <div class="w-full">
+            <label for="name" class="block font-bold mb-3">Name</label>
             <InputText
-              id="contact"
-              name="contact"
-              placeholder="Enter Contact"
-              variant="filled"
+              id="name"
+              v-model.trim="formValues.name"
+              :invalid="submitted && !formValues.name"
+              placeholder="Enter name"
               fluid
             />
-            <Message v-if="$form.contact?.invalid" severity="error" size="small" variant="simple">
-              {{ $form.contact.error?.message }}
+            <Message
+              v-if="submitted && !formValues.name"
+              severity="error"
+              size="small"
+              variant="simple"
+            >
+              Name is required!
             </Message>
           </div>
-          <div class="flex flex-col gap-1">
-            <label for="phone" class="block font-bold mb-1">Phone</label>
-            <InputText id="phone" name="phone" placeholder="Enter Phone" variant="filled" fluid />
-            <Message v-if="$form.phone?.invalid" severity="error" size="small" variant="simple">
-              {{ $form.phone.error?.message }}
+          <div class="w-full">
+            <label for="contact" class="block font-bold mb-3">Contact</label>
+            <InputText
+              id="contact"
+              v-model.trim="formValues.contact"
+              :invalid="submitted && !formValues.contact"
+              placeholder="Enter contact"
+              fluid
+            />
+            <Message
+              v-if="submitted && !formValues.contact"
+              severity="error"
+              size="small"
+              variant="simple"
+            >
+              Contact is required!
             </Message>
           </div>
-          <div class="flex flex-col gap-1">
-            <label for="email" class="block font-bold mb-1">Email</label>
-            <InputText id="email" name="email" placeholder="Enter Email" variant="filled" fluid />
-            <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-              {{ $form.email.error?.message }}
+          <div class="w-full">
+            <label for="phone" class="block font-bold mb-3">Phone</label>
+            <InputText
+              id="phone"
+              v-model.trim="formValues.phone"
+              :invalid="submitted && !formValues.phone"
+              placeholder="Enter phone"
+              fluid
+            />
+            <Message
+              v-if="submitted && !formValues.phone"
+              severity="error"
+              size="small"
+              variant="simple"
+            >
+              Phone is required!
+            </Message>
+          </div>
+          <div class="w-full">
+            <label for="email" class="block font-bold mb-3">Email</label>
+            <InputText
+              id="email"
+              v-model.trim="formValues.email"
+              :invalid="submitted && !formValues.email"
+              placeholder="Enter email"
+              fluid
+            />
+            <Message
+              v-if="submitted && !formValues.email"
+              severity="error"
+              size="small"
+              variant="simple"
+            >
+              Email is required!
             </Message>
           </div>
         </div>
@@ -57,152 +89,134 @@
               Shipping Address
             </Divider>
             <div class="grid grid-cols-2 gap-3">
-              <div class="flex flex-col gap-1">
+              <div class="w-full">
                 <label for="street" class="block font-bold mb-3">Street</label>
                 <InputText
                   id="street"
-                  name="shipping_address.street"
-                  placeholder="Enter Street"
+                  v-model.trim="formValues.shipping_address.street"
+                  :invalid="submitted && !formValues.shipping_address.street"
+                  placeholder="Enter street"
                   fluid
-                  variant="filled"
                 />
-                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-                  {{ $form.street.error?.message }}
+                <Message
+                  v-if="submitted && !formValues.shipping_address.street"
+                  severity="error"
+                  size="small"
+                  variant="simple"
+                >
+                  Street is required!
                 </Message>
               </div>
-              <div class="flex flex-col gap-1">
+              <div class="w-full">
                 <label for="city" class="block font-bold mb-3">City</label>
                 <InputText
                   id="city"
-                  name="shipping_address.city"
-                  placeholder="Enter City"
+                  v-model.trim="formValues.shipping_address.city"
+                  :invalid="submitted && !formValues.shipping_address.city"
+                  placeholder="Enter city"
                   fluid
-                  variant="filled"
                 />
-                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-                  {{ $form.city.error?.message }}
+                <Message
+                  v-if="submitted && !formValues.shipping_address.city"
+                  severity="error"
+                  size="small"
+                  variant="simple"
+                >
+                  City is required!
                 </Message>
               </div>
-              <div class="flex flex-col gap-1">
+              <div class="w-full">
                 <label for="state" class="block font-bold mb-3">State</label>
                 <InputText
                   id="state"
-                  name="shipping_address.state"
-                  placeholder="Enter State"
+                  v-model="formValues.shipping_address.state"
+                  placeholder="Enter state"
                   fluid
-                  variant="filled"
                 />
-                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-                  {{ $form.state.error?.message }}
-                </Message>
               </div>
-              <div class="flex flex-col gap-1">
+              <div class="w-full">
                 <label for="zip" class="block font-bold mb-3">Zip</label>
                 <InputText
                   id="zip"
-                  name="shipping_address.zip"
-                  placeholder="Enter Zip"
+                  v-model="formValues.shipping_address.zip"
+                  placeholder="Enter zip"
                   fluid
-                  variant="filled"
                 />
-                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-                  {{ $form.zip.error?.message }}
-                </Message>
               </div>
-              <div class="flex flex-col gap-1">
+              <div class="w-full">
                 <label for="country" class="block font-bold mb-3">Country</label>
                 <InputText
                   id="country"
-                  name="shipping_address.country"
-                  placeholder="Enter Country"
+                  v-model="formValues.shipping_address.country"
+                  placeholder="Enter country"
                   fluid
-                  variant="filled"
                 />
-                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-                  {{ $form.country.error?.message }}
-                </Message>
               </div>
             </div>
           </div>
-
           <div class="2xl:col-span-1 col-span-2">
             <Divider align="center" type="dotted" class="2xl:col-span-1 col-span-2">
               Mailing Address
             </Divider>
             <div class="grid grid-cols-2 gap-3">
-              <div class="flex flex-col gap-1">
+              <div v-if="!formValues.same_as_shipping" class="w-full">
                 <label for="street" class="block font-bold mb-3">Street</label>
                 <InputText
                   id="street"
-                  name="mailing_address.street"
-                  placeholder="Enter Street"
+                  v-model="formValues.mailing_address.street"
+                  placeholder="Enter street"
                   fluid
-                  variant="filled"
                 />
-                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-                  {{ $form.street.error?.message }}
-                </Message>
               </div>
-              <div class="flex flex-col gap-1">
+              <div v-if="!formValues.same_as_shipping" class="w-full">
                 <label for="city" class="block font-bold mb-3">City</label>
                 <InputText
                   id="city"
-                  name="mailing_address.city"
-                  placeholder="Enter City"
+                  v-model="formValues.mailing_address.city"
+                  placeholder="Enter city"
                   fluid
-                  variant="filled"
                 />
-                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-                  {{ $form.city.error?.message }}
-                </Message>
               </div>
-              <div class="flex flex-col gap-1">
+              <div v-if="!formValues.same_as_shipping" class="w-full">
                 <label for="state" class="block font-bold mb-3">State</label>
                 <InputText
                   id="state"
-                  name="mailing_address.state"
-                  placeholder="Enter State"
+                  v-model="formValues.mailing_address.state"
+                  placeholder="Enter state"
                   fluid
-                  variant="filled"
                 />
-                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-                  {{ $form.state.error?.message }}
-                </Message>
               </div>
-              <div class="flex flex-col gap-1">
+              <div v-if="!formValues.same_as_shipping" class="w-full">
                 <label for="zip" class="block font-bold mb-3">Zip</label>
                 <InputText
                   id="zip"
-                  name="mailing_address.zip"
-                  placeholder="Enter Zip"
+                  v-model="formValues.mailing_address.zip"
+                  placeholder="Enter zip"
                   fluid
-                  variant="filled"
                 />
-                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-                  {{ $form.zip.error?.message }}
-                </Message>
               </div>
-              <div class="flex flex-col gap-1">
+              <div v-if="!formValues.same_as_shipping" class="w-full">
                 <label for="country" class="block font-bold mb-3">Country</label>
                 <InputText
                   id="country"
-                  name="mailing_address.country"
-                  placeholder="Enter Country"
+                  v-model="formValues.mailing_address.country"
+                  placeholder="Enter country"
                   fluid
-                  variant="filled"
                 />
-                <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
-                  {{ $form.country.error?.message }}
-                </Message>
+              </div>
+              <div class="w-full">
+                <label for="sameAddress" class="block font-bold mb-3">
+                  Same As Shipping Address
+                </label>
+                <ToggleSwitch v-model="formValues.same_as_shipping" />
               </div>
             </div>
           </div>
         </div>
-
-        <div class="flex justify-end">
-          <Button type="submit" severity="primary" label="Save" class="mt-5" />
-        </div>
-      </Form>
+      </div>
+      <div class="flex justify-end">
+        <Button label="Save" icon="pi pi-check" @click="handleSubmit" />
+      </div>
     </template>
   </Card>
 </template>
@@ -211,39 +225,37 @@
 import { onMounted, ref, type Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { createRecordApi } from '@src/api/endpoints';
-import { InputText, Divider, Button, Card, ToggleSwitch, Message, ChipStyle } from 'primevue';
-import { zodResolver } from '@primevue/forms/resolvers/zod';
-import { Form, type FormSubmitEvent } from '@primevue/forms';
-import { z } from 'zod';
+import { InputText, Divider, Button, Card, ToggleSwitch, Message } from 'primevue';
 
 const router = useRouter();
-const formValues = ref({});
+const submitted: Ref = ref(false);
 
-const resolver = ref(
-  zodResolver(
-    z.object({
-      name: z.string({ message: 'Name is required!' }),
-      contact: z.string({ message: 'Contact is required!' }),
-      phone: z.string({ message: 'Phonee is required!' }),
-      email: z.string({ message: 'Email is required!' }),
-      'shipping_address.street': z.string({ message: 'Street is required!' }),
-      'shipping_address.city': z.string({ message: 'City is required!' }),
-      'shipping_address.state': z.string({ message: 'State is required!' }),
-      'shipping_address.zip': z.string({ message: 'Zip is required!' }),
-      'shipping_address.country': z.string({ message: 'Country is required!' }),
-      'mailing_address.street': z.string().optional(),
-      'mailing_address.city': z.string().optional(),
-      'mailing_address.state': z.string().optional(),
-      'mailing_address.zip': z.string().optional(),
-      'mailing_address.country': z.string().optional(),
-      status: z.number().optional()
-    })
-  )
-);
+const formValues: Ref = ref({
+  name: '',
+  contact: '',
+  phone: '',
+  email: '',
+  same_as_shipping: false,
+  shipping_address: {
+    street: '',
+    city: '',
+    state: '',
+    zip: '',
+    country: ''
+  },
+  mailing_address: {
+    street: '',
+    city: '',
+    state: '',
+    zip: '',
+    country: ''
+  }
+});
 
-const onFormSubmit = async ({ valid, values }: FormSubmitEvent) => {
-  if (valid) {
-    const res: any = await createRecordApi('/suppliers', values);
+const handleSubmit = async () => {
+  submitted.value = true;
+  if (formValues?.value.name !== undefined) {
+    const res: any = await createRecordApi('/suppliers', formValues.value);
     window.toast('success', 'Supplier Information', res.message);
     router.push({ name: 'supplier_list' });
   }
