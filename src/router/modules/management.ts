@@ -82,6 +82,27 @@ const routes: RouteRecordRaw[] = [
               permissions: ['purchase menu']
             },
             component: () => import('@src/views/purchase/index.vue')
+          },
+          {
+            path: '/purchase/add',
+            name: 'purchase_add',
+            meta: {
+              title: 'Add Purchase',
+              icon: 'pi pi-shopping-cart',
+              permissions: ['purchase create']
+            },
+            component: () => import('@src/components/purchase/AddPurchase.vue')
+          },
+          {
+            path: '/purchase/:purchase_id/edit',
+            name: 'purchase_edit',
+            meta: {
+              title: 'Edit Purchase',
+              icon: 'pi pi-shopping-cart',
+              permissions: ['purchase update'],
+              hidden: true
+            },
+            component: () => import('@src/components/purchase/EditPurchase.vue')
           }
         ]
       },

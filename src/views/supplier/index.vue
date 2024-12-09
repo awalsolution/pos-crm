@@ -107,8 +107,8 @@
       </Column>
       <Column field="status" header="Status" class="whitespace-nowrap">
         <template #body="{ data }">
-          <Tag :value="data.status" :severity="data.status === 0 ? 'error' : 'info'">
-            {{ data.status === 1 ? 'Active' : 'Disable' }}
+          <Tag :severity="data.status === 0 ? 'error' : 'info'">
+            {{ data.status }}
           </Tag>
         </template>
       </Column>
@@ -215,36 +215,6 @@ function openDeleteDialog(item: any) {
   data.value = item;
   deleteDialog.value = true;
 }
-
-// const saveForm = () => {
-//   submitted.value = true;
-//   if (data?.value.id) {
-//     updateRecordApi(`/suppliers/${data.value.id}`, data.value).then((res: any) => {
-//       window.toast('success', 'Success Message', res.message);
-//       getList();
-//     });
-//   } else {
-//     createRecordApi('/suppliers', data.value).then((res: any) => {
-//       window.toast('success', 'Success Message', res.message);
-//       getList();
-//     });
-//   }
-//   addDialog.value = false;
-//   data.value = {
-//     defaul_po_days: 7,
-//     min_order: 0.0,
-//     sameAsShipping: false,
-//     pd_fright_amount: 0.0,
-//     shippingAddress: {
-//       street: '',
-//       city: '',
-//       state: '',
-//       zip: '',
-//       country: ''
-//     },
-//     mailingAddress: { street: '', city: '', state: '', zip: '', country: '' }
-//   };
-// };
 
 const handleDelete = async () => {
   const res: any = await deleteRecordApi(`/suppliers/${deleteId.value}`);
